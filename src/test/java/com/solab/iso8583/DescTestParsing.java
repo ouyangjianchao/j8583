@@ -18,7 +18,7 @@ import org.junit.Test;
  * 
  * @author Enrique Zamudio
  */
-public class TestParsing {
+public class DescTestParsing {
 
 	private MessageFactory<IsoMessage> mf;
 

@@ -10,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.solab.iso8583.util.StringHelper;
+
 /** These are very simple tests for creating and manipulating messages.
  * 
  * @author Enrique Zamudio
@@ -31,7 +33,7 @@ public class TestIsoMessage {
 	public void testCreation() {
 		IsoMessage iso = mf.newMessage(0x200);
         Assert.assertEquals(0x200, iso.getType());
-        Assert.assertTrue(iso.hasEveryField(3, 32, 35, 43, 48, 49, 60, 61, 100, 102));
+        Assert.assertTrue(iso.hasEveryField(3, 32, 35, 43, 48, 49, 60, 61));
         Assert.assertEquals(IsoType.NUMERIC, iso.getField(3).getType());
         Assert.assertEquals("650000", iso.getObjectValue(3));
         Assert.assertEquals(IsoType.LLVAR, iso.getField(32).getType());
@@ -43,8 +45,6 @@ public class TestIsoMessage {
         Assert.assertEquals(IsoType.ALPHA, iso.getField(49).getType());
         Assert.assertEquals(IsoType.LLLVAR, iso.getField(60).getType());
         Assert.assertEquals(IsoType.LLLVAR, iso.getField(61).getType());
-        Assert.assertEquals(IsoType.LLVAR, iso.getField(100).getType());
-        Assert.assertEquals(IsoType.LLVAR, iso.getField(102).getType());
 		for (int i = 4; i < 32; i++) {
             Assert.assertFalse("ISO should not contain " + i, iso.hasField(i));
 		}
@@ -60,6 +60,18 @@ public class TestIsoMessage {
 		for (int i = 103; i < 128; i++) {
             Assert.assertFalse("ISO should not contain " + i, iso.hasField(i));
 		}
+		
+		int len = iso.writeData().length;
+		byte high = (byte) (len >> 8);
+		byte low  = (byte) len;
+		
+		byte[] pack = new byte[len + 2];
+		pack[0] = high;
+		pack[1] = low;
+		System.arraycopy(iso.writeData(), 0, pack, 2, len);
+				
+		StringHelper.dumpHex("ISOMSG", pack);
+//		StringHelper.dumpHex("ISOMSG", iso.writeData());		
 	}
 
 	@Test

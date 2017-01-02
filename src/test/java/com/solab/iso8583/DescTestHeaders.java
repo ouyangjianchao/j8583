@@ -12,7 +12,7 @@ import java.io.IOException;
  * @author Enrique Zamudio
  *         Date: 01/07/16 8:21 AM
  */
-public class TestHeaders {
+public class DescTestHeaders {
 
     private MessageFactory<IsoMessage> mf;
 

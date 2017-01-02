@@ -11,7 +11,7 @@ import org.junit.Test;
  * 
  * @author Enrique Zamudio
  */
-public class TestFormats {
+public class DescTestFormats {
 
 	private final Date date = new Date(96867296000l);
 
