@@ -19,7 +19,6 @@
 package com.solab.iso8583.util;
 
 import java.math.BigInteger;
-import java.text.ParseException;
 
 /**
  * Routines for Binary Coded Digits.
@@ -70,6 +69,26 @@ public final class Bcd {
             bufpos++;
         }
     }
+    
+	public static byte[] encode(String value) {
+		int len = value.length();
+		byte[] buf = new byte[len / 2 + len % 2];
+		return _encode(value, buf);
+	}
+
+	public static byte[] _encode(String value, byte[] buf) {
+		int size = buf.length * 2;
+		if (size > value.length()) {
+			StringBuffer sb = new StringBuffer(value);
+			for (int i = value.length(); i < size; i++) {
+				sb.append("0");
+			}
+			value = sb.toString();
+		}
+
+		buf = HexCodec.hexDecode(value);
+		return buf;
+	}
 
     /** Decodes a BCD-encoded number as a BigInteger.
      * @param buf The byte buffer containing the BCD data.

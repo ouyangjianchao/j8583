@@ -468,15 +468,18 @@ public class MessageFactory<T extends IsoMessage> {
 									|| val.getType() == IsoType.DATE4 || val.getType() == IsoType.DATE12
 									|| val.getType() == IsoType.DATE_EXP
 									|| val.getType() == IsoType.AMOUNT
-									|| val.getType() == IsoType.TIME) {
+									|| val.getType() == IsoType.TIME
+									|| val.getType() == IsoType.BCD) {
 								pos += (val.getLength() / 2) + (val.getLength() % 2);
 							} else {
 								pos += val.getLength();
 							}
-							if (val.getType() == IsoType.LLVAR || val.getType() == IsoType.LLBIN) {
+							if (val.getType() == IsoType.LLVAR || val.getType() == IsoType.LLBIN
+									|| val.getType() == IsoType.LLBCD) {
 								pos++;
 							} else if (val.getType() == IsoType.LLLVAR
 									|| val.getType() == IsoType.LLLBIN
+									|| val.getType() == IsoType.LLLBCD
                                     || val.getType() == IsoType.LLLLVAR
 									|| val.getType() == IsoType.LLLLBIN) {
                                 pos += 2;

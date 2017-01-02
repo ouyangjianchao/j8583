@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -329,14 +330,46 @@ public class IsoValue<T> implements Cloneable {
 		} else if (binary) {
 			//numeric types in binary are coded like this
 			byte[] buf = null;
-			if (type == IsoType.NUMERIC) {
+			if (type == IsoType.BCD || type == IsoType.NUMERIC) {
 				buf = new byte[(length / 2) + (length % 2)];
 			} else if (type == IsoType.AMOUNT) {
 				buf = new byte[6];
 			} else if (type == IsoType.DATE10 || type == IsoType.DATE4 ||
 					type == IsoType.DATE_EXP || type == IsoType.TIME || type == IsoType.DATE12) {
 				buf = new byte[length / 2];
+			} else {
+				if (this.type == IsoType.LLBCD) {
+					String val = toString();
+					this.length = val.getBytes(Charset.forName(encoding)).length;
+
+					String strlen = null;
+					if (this.length < 10)
+						strlen = "0" + this.length;
+					else {
+						strlen = Integer.toString(this.length);
+					}
+					outs.write(Bcd.encode(strlen));
+					outs.write(Bcd.encode(val));
+					return;
+				}
+				if (this.type == IsoType.LLLBCD) {
+					String val = toString();
+					this.length = val.getBytes(Charset.forName(encoding)).length;
+
+					String strlen = null;
+					if (this.length < 10)
+						strlen = "000" + this.length;
+					else if (this.length < 100)
+						strlen = "00" + this.length;
+					else {
+						strlen = "0" + this.length;
+					}
+					outs.write(Bcd.encode(strlen));
+					outs.write(Bcd.encode(val));
+					return;
+				}
 			}
+			
 			//Encode in BCD if it's one of these types
 			if (buf != null) {
 				Bcd.encode(toString(), buf);

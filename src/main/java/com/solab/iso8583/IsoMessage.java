@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 package com.solab.iso8583;
 
+import com.solab.iso8583.codecs.BcdCodec;
 import com.solab.iso8583.util.HexCodec;
 
 import java.io.ByteArrayOutputStream;
@@ -365,7 +366,7 @@ public class IsoMessage {
     	ByteArrayOutputStream bout = new ByteArrayOutputStream();
     	if (isoHeader != null) {
     		try {
-    			bout.write(isoHeader.getBytes(encoding));
+    			bout.write(BcdCodec.strToBcd(isoHeader));
     		} catch (IOException ex) {
     			//should never happen, writing to a ByteArrayOutputStream
     		}
